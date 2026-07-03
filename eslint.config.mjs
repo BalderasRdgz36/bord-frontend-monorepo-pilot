@@ -1,4 +1,5 @@
 import nx from "@nx/eslint-plugin";
+import importPlugin from "eslint-plugin-import";
 
 export default [
     ...nx.configs["flat/base"],
@@ -50,7 +51,36 @@ export default [
             "**/*.cjs",
             "**/*.mjs"
         ],
-        // Override or add rules here
-        rules: {}
+        plugins: {
+            import: importPlugin
+        },
+        rules: {
+            "import/order": [
+                "warn",
+                {
+                    groups: [
+                        "builtin",
+                        "external",
+                        "internal",
+                        ["parent", "sibling"],
+                        "index",
+                        "type"
+                    ],
+                    pathGroups: [
+                        {
+                            pattern: "react",
+                            group: "external",
+                            position: "before"
+                        }
+                    ],
+                    pathGroupsExcludedImportTypes: ["react", "type"],
+                    "newlines-between": "always",
+                    alphabetize: {
+                        order: "asc",
+                        caseInsensitive: true
+                    }
+                }
+            ]
+        }
     }
 ];

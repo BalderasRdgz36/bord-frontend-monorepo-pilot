@@ -1,0 +1,33 @@
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(head -n1 "$COMMIT_MSG_FILE")
+
+echo "${YELLOW}🔍 Validando mensaje de commit: '${COMMIT_MSG}'${NC}"
+
+# =====================================================
+# Regex: obliga a que el commit empiece con tipo: mensaje
+# Tipos permitidos:
+#   feat:      Nueva funcionalidad
+#   fix:       Corrección de bug
+#   docs:      Documentación
+#   style:     Formato, estilo, indentación, sin afectar lógica
+#   refactor:  Refactor de código, sin agregar funcionalidad ni bugfix
+#   perf:      Mejoras de performance
+#   test:      Añadir o corregir tests
+#   build:     Cambios en scripts/build/compilación
+#   ci:        Cambios en integración continua
+#   chore:     Mantenimiento, tareas menores
+#   revert:    Revertir un commit previo
+# =====================================================
+
+if ! echo "$COMMIT_MSG" | grep -E "^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert): .+" > /dev/null; then
+  echo "${RED}❌ Commit inválido! Debe comenzar con uno de los tipos: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert${NC}"
+  echo "${RED}Ejemplo correcto: feat: agregar validación de login${NC}"
+  exit 1
+fi
+
+echo "${GREEN}✅ Commit válido${NC}"

@@ -1,3 +1,5 @@
+import type { DeliveryTimePreference, FormStatus } from '@/constants/form.constants';
+
 export interface CountryApiData {
   id: number;
   name: string;
@@ -12,8 +14,6 @@ export interface FormApiData {
   countryCode: string;
   existingAddress: unknown | null;
 }
-
-import type { DeliveryTimePreference, FormStatus } from '@/constants/form.constants';
 
 // Respuesta mínima del GET por token: solo el estado, sin datos personales.
 export interface FormStatusResponse {
