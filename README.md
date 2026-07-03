@@ -4,7 +4,7 @@ Nx monorepo for Bord's frontend applications and microfrontends (React + Vite).
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
-[Aprende más sobre esta configuración de workspace](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) o corre `npx nx graph` para explorar visualmente lo que se generó.
+[Aprende más sobre esta configuración de workspace](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) o corre `npx nx graph` para explorar visualmente lo que se generó.
 
 ## Requisitos
 
@@ -18,11 +18,11 @@ Usar una versión de Node distinta (por ejemplo, un daemon viejo corriendo con o
 
 ## Proyectos
 
-| App | Puerto dev | Puerto preview |
-| --- | --- | --- |
-| `my-app-nx` | 4200 | 4300 |
-| `my-second-app` | 4201 | 4301 |
-| `@bord/mfe-address-form` | 4202 | 4302 |
+| App                      | Puerto dev | Puerto preview |
+| ------------------------ | ---------- | -------------- |
+| `my-app-nx`              | 4200       | 4300           |
+| `my-second-app`          | 4201       | 4301           |
+| `@bord/mfe-address-form` | 4202       | 4302           |
 
 ## Correr tareas
 
@@ -76,6 +76,33 @@ Puedes usar `npx nx list` para ver la lista de plugins instalados. Luego, corre 
 
 [Más sobre los plugins de Nx »](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Explorar el registro de plugins »](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
+## Convenciones de commits y hooks
+
+Este repo usa [Husky](https://typicode.github.io/husky/) para correr validaciones automáticas en cada commit.
+
+### `pre-commit`
+
+- Formatea los archivos staged con [lint-staged](https://github.com/okonet/lint-staged) + Prettier.
+- Corre `lint` y `typecheck` sobre los proyectos afectados con `npx nx affected -t lint,typecheck --uncommitted`.
+
+Si alguna de estas validaciones falla, el commit se cancela hasta corregir los errores.
+
+### `commit-msg`
+
+El mensaje de commit debe seguir el formato de [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+tipo: descripción
+```
+
+Tipos permitidos: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
+
+Ejemplo:
+
+```
+feat: agregar validación de login
+```
+
 ## Configurar CI
 
 ### Paso 1
@@ -113,12 +140,13 @@ Nx Console es una extensión de editor que mejora tu experiencia de desarrollo. 
 
 Aprende más:
 
-- [Más sobre esta configuración de workspace](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
+- [Más sobre esta configuración de workspace](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 - [Más sobre Nx en CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 - [Publicar paquetes con Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 - [¿Qué son los plugins de Nx?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
 Y únete a la comunidad de Nx:
+
 - [Discord](https://go.nx.dev/community)
 - [Síguenos en X](https://twitter.com/nxdevtools) o [LinkedIn](https://www.linkedin.com/company/nrwl)
 - [Nuestro canal de Youtube](https://www.youtube.com/@nxdevtools)
