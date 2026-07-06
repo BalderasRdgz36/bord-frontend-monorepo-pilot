@@ -1,0 +1,40 @@
+version: 0.2
+env:
+  variables:
+    FETCH_VITE_SUBSCRIPTION: /bord-address-form/VITE_SUBSCRIPTION
+    FETCH_VITE_ORGANIZATION: /bord-address-form/VITE_ORGANIZATION
+phases:
+  install:
+    runtime-versions:
+      # Alineado con .nvmrc del workspace
+      nodejs: 24
+    commands:
+      # Install dependencies (monorepo Nx, se instala desde la raíz)
+      - npm ci
+  pre_build:
+    commands:
+      - aws configure set role_arn $CROSS_ACCOUNT_ROLE --profile cross_account
+      - aws configure set role_session_name  $SESSION_NAME --profile cross_account
+      - aws configure set credential_source  EcsContainer --profile cross_account
+      - export AWS_DEFAULT_PROFILE=cross_account
+      - echo "Fetching parameter from Parameter Store..."
+      - VITE_SUBSCRIPTION=$(aws ssm get-parameter --name "$FETCH_VITE_SUBSCRIPTION" --with-decryption --query 'Parameter.Value' --output text )
+      - VITE_ORGANIZATION=$(aws ssm get-parameter --name "$FETCH_VITE_ORGANIZATION" --with-decryption --query 'Parameter.Value' --output text )
+      - export VITE_SUBSCRIPTION VITE_ORGANIZATION
+  build:
+    commands:
+      # Build solo del proyecto Nx @bord/mfe-address-form (carpeta apps/bord-address-form)
+      - npx nx build @bord/mfe-address-form
+  post_build:
+    commands:
+      # Copy build artifacts to the S3 bucket
+      - echo $S3_BUCKET_FRONTEND_NAME
+      - echo $CLOUDFRONTDISTRIBUTION
+      - aws s3 sync apps/bord-address-form/dist/ s3://$S3_BUCKET_FRONTEND_NAME  #--delete --cache-control public
+      - echo invalidate cache
+      - aws configure set preview.cloudfront true --profile cross_account
+      - aws cloudfront create-invalidation --distribution-id $CLOUDFRONTDISTRIBUTION --paths "/*" --profile cross_account
+      - echo Cache cleared.
+artifacts:
+  files:
+    - 'apps/bord-address-form/dist/*'

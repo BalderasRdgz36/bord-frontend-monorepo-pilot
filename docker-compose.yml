@@ -1,0 +1,11 @@
+version: "3.3"
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        APP_DIR: bord-address-form
+        NX_PROJECT: "@bord/mfe-address-form"
+    ports:
+      - "80:80"
